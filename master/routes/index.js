@@ -4,14 +4,13 @@ var http = require("http");
 var fs = require('fs');
 
 var man_network = ['localhost', 'wrong'];
-
 var ips = [];
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-})
-.get('/detect', function(req, res, next) {
+var showIndex = function(req, res, next) {
+  res.render('index', { title: 'P4 Management - Master' });
+}
+
+var detect = function(req, res, next) {
   console.log('dentro get detect');
 
   /*Reset subscribers.txt and send get requests*/
@@ -27,38 +26,54 @@ router.get('/', function(req, res, next) {
             'Content-Type': 'application/json'
         }
       }
+      var get_req = http.request(options, function(response){
+          console.log(options.host + ':' + response.statusCode);
+          response.setEncoding('utf8');
 
-      var get_req = http.request(options, function(res)
-      {
-          console.log(options.host + ':' + res.statusCode);
-          res.setEncoding('utf8');
-
-          if (res.statusCode < 300){
+          if (response.statusCode < 300){
             ips.push(options.host);
             fs.appendFile('subscribers.txt', options.host + '\n', function (err) {
               if (err) throw err;
               console.log('Saved!');
             });
-            console.log(ips);
+            //console.log(ips);
+            // emit to socket.io clients
+            res.io.emit("socketToMe", options.host);
           }
       });
 
       get_req.on('error', function(err) {
         console.log(err.message);
-          //res.send('error: ' + err.message);
       });
 
       get_req.end();
     });
   });
 
-    res.render('index', { title: 'Express' });
-})
-.get('/subscribe', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-})
-.get('/update', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+  res.json({ status: "OK" });
+}
+
+var subscribe = function(req, res, next) {
+  ip = req.connection.remoteAddress;
+  fs.appendFile('subscribers.txt', ip + '\n', function (err) {
+              if (err) throw err;
+              console.log('Saved!');
+  });
+  res.json({status: "OK"});
+}
+
+var showUpdateForm = function(req, res, next) {
+  res.render('update', { title: 'Update subscribers' });
+}
+
+var update = function(req, res, next) {
+  res.json({status: "WIP"});
+}
+
+router.get('/', showIndex)
+      .get('/detect', detect)
+      .get('/subscribe', subscribe)
+      .get('/update', showUpdateForm)
+      .post('/update', update);
 
 module.exports = router;

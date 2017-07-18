@@ -2,4 +2,28 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{title}
+  p Welcome to Master.
+  p
+    button#detect(onclick="detect()") detect
+  span#ips
+  script.
+    var detect = function() { httpGetAsync("/detect", 
+                                            function(){ document.getElementById("detect").disabled = true;
+                                                        document.getElementById("ips").innerHTML = ""; }, 
+                                            function(){ document.getElementById("detect").disabled = false; }
+                                          ) };
+    function httpGetAsync(theUrl, callfront, callback){
+      callfront();
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function() { 
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+              callback();
+      }
+      xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+      xmlHttp.send(null);
+    }
+    var socket = io('//localhost:3000');
+    socket.on('socketToMe', function (data) {
+      console.log(data);
+      document.getElementById("ips").innerHTML += "<br />" + data;
+    });
