@@ -10,5 +10,5 @@ Master and Slaves are on the same LAN. Master is 10.255.0.1, slaves are from .2 
   - /update -> shows a form and the subsequent post is sent to all subscribers in order to compile and run the p4 and cpp code attached.
   
 - Slave:
+  - automatic get to master/subscribe on startup
   - /update -> attached files are copied, P4 processes are killed and the new file is compiled and run.
-  - /subscribe -> subscribes to Master.
