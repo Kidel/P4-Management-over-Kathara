@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
-var sys = require('sys')
 var exec = require('child_process').exec;
 
 var debug = true;
@@ -24,7 +23,10 @@ var update = function(req, res, next){
       var child;
       fs.readFile('pid.txt', function (err, data) {
         if (err && typeof data != "undefined" && data.toString() != "") p4_pid = -1;
-        else p4_pid = data.toString();
+        else {
+          p4_pid = data.toString().split("\n");
+          p4_pid = p4_pid[p4_pid.length - 1];
+        }
         console.log("BM PID: " + p4_pid);
         var command1 = (p4_pid == -1 || p4_pid.length < 1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
         child = exec(command1, function (error, stdout, stderr) {
@@ -47,14 +49,15 @@ var update = function(req, res, next){
               if (error !== null) {
                 console.log('exec error: ' + error);
               }
-              var startp4
+              var startp4;
               startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
                 console.log('stdout: ' + stdout);
                 console.log('stderr: ' + stderr);
                 if (error !== null) {
                   console.log('exec error: ' + error);
                 }
-                startp4 = exec("ps axf | grep simple_switch | grep -v grep | awk '{print $1}'", function (error, stdout, stderr) {
+                var getpid;
+                getpid = exec("ps axf | grep simple_switch | grep -v grep | awk '{print $1}'", function (error, stdout, stderr) {
                   console.log('stdout: ' + stdout);
                   console.log('stderr: ' + stderr);
                   fs.writeFile('pid.txt', stdout, function (err) {
