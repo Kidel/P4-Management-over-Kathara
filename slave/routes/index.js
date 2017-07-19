@@ -16,7 +16,7 @@ var update = function(req, res, next){
 
     fs.writeFile(req.body.cpuName, req.body.cpu, function (err) {
       if (err) console.log(err.message);
-      else console.log('Saved p4 program in ' + req.body.p4Name);
+      else console.log('Saved p4 program in ' + req.body.cpuName);
 
       var json_name = req.body.p4Name.replace('.p4', '.json');
 
