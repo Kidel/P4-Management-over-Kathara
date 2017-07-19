@@ -17,16 +17,42 @@ var update = function(req, res, next){
       if (err) console.log(err.message);
       else console.log('Saved p4 program in ' + req.body.p4Name);
 
+      var json_name = req.body.p4Name.replace('.p4', '.json');
+
       /*comandi*/
+
       var child;
-      child = exec("copy " + req.body.p4Name + " pippo.txt", function (error, stdout, stderr) {
+      child = exec("cd /p4c-bm", function (error, stdout, stderr) {
         sys.print('stdout: ' + stdout);
         sys.print('stderr: ' + stderr);
         if (error !== null) {
           console.log('exec error: ' + error);
         }
+        var compile;
+        compile = exec("p4c-bmv2 --json " + json_name + " " + req.body.p4Name, function (error, stdout, stderr) {
+          sys.print('stdout: ' + stdout);
+          sys.print('stderr: ' + stderr);
+          if (error !== null) {
+            console.log('exec error: ' + error);
+          }
+          var changedir;
+          changedir = exec("cd /PI", function (error, stdout, stderr) {
+            sys.print('stdout: ' + stdout);
+            sys.print('stderr: ' + stderr);
+            if (error !== null) {
+              console.log('exec error: ' + error);
+            }
+            var startp4
+            startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 " + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
+              sys.print('stdout: ' + stdout);
+              sys.print('stderr: ' + stderr);
+              if (error !== null) {
+                console.log('exec error: ' + error);
+              }
+            });
+          });
+        });
       });
-
     });
   });
 };
