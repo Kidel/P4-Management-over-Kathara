@@ -13,7 +13,7 @@ The master is also on the Doker bridge, exposing port 3000.
   - /update -> shows a form and the subsequent post is sent to all subscribers in order to compile and run the p4 and cpp code attached.
   
 - Slave:
-  - automatic message to 'master/subscribe' to subscribe on startup
+  - automatic message to 'master/subscribe' to subscribe on startup.
   - /update -> attached files are copied, P4 processes are killed and the new file is compiled and run.
   
   
