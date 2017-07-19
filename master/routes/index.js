@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var http = require("http");
 var fs = require('fs');
+var querystring = require('querystring');
 
 var man_network = ['localhost', 'wrong'];
 var subscribers = [];
@@ -65,11 +66,47 @@ var subscribe = function(req, res, next) {
 }
 
 var showUpdateForm = function(req, res, next) {
-  res.render('update', { title: 'Update subscribers' });
+  res.render('update', { title: 'Update subscribers', subscribers: subscribers });
 }
 
 var update = function(req, res, next) {
-  res.json({status: "WIP"});
+  subscribers.forEach(function(ip) {
+    var data = querystring.stringify({
+        p4: req.body.p4,
+        p4Name: req.body.p4Name,
+        cpu: req.body.cpu,
+        cpuName: req.body.cpuName
+      });
+
+    var options = {
+        host: ip,
+        port: 3001,
+        path: '/update',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(data)
+        }
+    };
+
+    var post_req = http.request(options, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            console.log("body: " + chunk);
+        });
+    });
+
+    post_req.on('error', function(err) {
+          console.log(err.message);
+    });
+
+    post_req.write(data);
+    post_req.end();
+  });
+  if(subscribers.length > 0)
+    res.json({status: "OK"});
+  else 
+    res.json({status: "NOSUBS"});
 }
 
 router.get('/', showIndex)

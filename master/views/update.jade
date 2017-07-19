@@ -2,5 +2,18 @@ extends layout
 
 block content
   h1= title
-  p Welcome to Master.
-  form
+  p In this page you can update all the subscribers, that are: 
+    br
+    | #{subscribers}
+  form(action="/update", method="POST", target="iframe")
+    input(type="text", name="p4Name", value="program.p4")
+    br
+    textarea(rows="4", cols="50", name="p4") /*your p4 program here*/
+    br
+    input(type="text", name="cpuName", value="program.cpp")
+    br
+    textarea(rows="4", cols="50", name="cpu") /*your cpu program here*/
+    br
+    input(type="submit")
+
+  iframe(name="iframe", frameborder="0")
