@@ -4,7 +4,7 @@ var http = require("http");
 var fs = require('fs');
 
 var man_network = ['localhost', 'wrong'];
-var ips = [];
+var subscribers = [];
 
 var showIndex = function(req, res, next) {
   res.render('index', { title: 'P4 Management - Master' });
@@ -14,6 +14,7 @@ var detect = function(req, res, next) {
   console.log('dentro get detect');
 
   /*Reset subscribers.txt and send get requests*/
+  var subscribers = [];
   fs.writeFile('subscribers.txt', '', function(){
     console.log('subscribers reset');
     man_network.forEach(function(ip) {
@@ -31,12 +32,12 @@ var detect = function(req, res, next) {
           response.setEncoding('utf8');
 
           if (response.statusCode < 300){
-            ips.push(options.host);
+            subscribers.push(options.host);
             fs.appendFile('subscribers.txt', options.host + '\n', function (err) {
               if (err) throw err;
               console.log('Saved!');
             });
-            //console.log(ips);
+            //console.log(subscribers);
             // emit to socket.io clients
             res.io.emit("socketToMe", options.host);
           }
@@ -55,6 +56,7 @@ var detect = function(req, res, next) {
 
 var subscribe = function(req, res, next) {
   ip = req.connection.remoteAddress;
+  subscribers.push(ip);
   fs.appendFile('subscribers.txt', ip + '\n', function (err) {
               if (err) throw err;
               console.log('Saved!');
