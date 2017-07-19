@@ -36,26 +36,16 @@ var update = function(req, res, next){
             console.log('exec error: ' + error);
           }
           var compile;
-          compile = exec("nohup 'p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name + "' &", function (error, stdout, stderr) {
-            console.log('stdout2: ' + stdout);
-            console.log('stderr2: ' + stderr);
-            if (error !== null) {
-              console.log('exec error: ' + error);
-            }
-            var changedir;
-            changedir = exec("cd /PI", function (error, stdout, stderr) {
-              console.log('stdout3: ' + stdout);
-              console.log('stderr3: ' + stderr);
-              if (error !== null) {
-                console.log('exec error: ' + error);
-              }
-              var startp4;
-              startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
-                console.log('stdout4: ' + stdout);
-                console.log('stderr4: ' + stderr);
+          compile = exec(
+            "p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name 
+            + " && cd /PI && simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &"
+            , function (error, stdout, stderr) {
+                console.log('stdout2: ' + stdout);
+                console.log('stderr2: ' + stderr);
                 if (error !== null) {
                   console.log('exec error: ' + error);
                 }
+                
                 var getpid;
                 getpid = exec("ps axf | grep simple_switch | grep -v grep | awk '{print $1}'", function (error, stdout, stderr) {
                   console.log('stdout5: ' + stdout);
@@ -64,9 +54,7 @@ var update = function(req, res, next){
                       if (err) console.log(err.message);
                       else console.log('Saved PID!');
                   });
-                })
-              });
-            });
+                });
           });
         });
       });
