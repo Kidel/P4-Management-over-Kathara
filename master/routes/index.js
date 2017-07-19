@@ -4,7 +4,10 @@ var http = require("http");
 var fs = require('fs');
 var querystring = require('querystring');
 
-var man_network = ['localhost', 'wrong'];
+var man_network = [];
+for(var i=2; i < 255; i++) 
+  man_network.push('10.0.0.'+i);
+
 var subscribers = [];
 
 var showIndex = function(req, res, next) {
@@ -70,43 +73,46 @@ var showUpdateForm = function(req, res, next) {
 }
 
 var update = function(req, res, next) {
-  subscribers.forEach(function(ip) {
-    var data = querystring.stringify({
-        p4: req.body.p4,
-        p4Name: req.body.p4Name,
-        cpu: req.body.cpu,
-        cpuName: req.body.cpuName
+  fs.readFile('subscribers.txt', function (err, data) {
+    subscribers = data.split("\n");
+    subscribers.forEach(function(ip) {
+      var data = querystring.stringify({
+          p4: req.body.p4,
+          p4Name: req.body.p4Name,
+          cpu: req.body.cpu,
+          cpuName: req.body.cpuName
+        });
+
+      var options = {
+          host: ip,
+          port: 3001,
+          path: '/update',
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Content-Length': Buffer.byteLength(data)
+          }
+      };
+
+      var post_req = http.request(options, function(res) {
+          res.setEncoding('utf8');
+          res.on('data', function (chunk) {
+              console.log("body: " + chunk);
+          });
       });
 
-    var options = {
-        host: ip,
-        port: 3001,
-        path: '/update',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(data)
-        }
-    };
+      post_req.on('error', function(err) {
+            console.log(err.message);
+      });
 
-    var post_req = http.request(options, function(res) {
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-            console.log("body: " + chunk);
-        });
+      post_req.write(data);
+      post_req.end();
     });
-
-    post_req.on('error', function(err) {
-          console.log(err.message);
-    });
-
-    post_req.write(data);
-    post_req.end();
+    if(subscribers.length > 0)
+      res.json({status: "OK"});
+    else 
+      res.json({status: "NOSUBS"});
   });
-  if(subscribers.length > 0)
-    res.json({status: "OK"});
-  else 
-    res.json({status: "NOSUBS"});
 }
 
 router.get('/', showIndex)
