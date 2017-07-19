@@ -50,14 +50,18 @@ var update = function(req, res, next){
               var startp4
               startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
                 console.log('stdout: ' + stdout);
-                fs.writeFile('pid.txt', stdout, function (err) {
-                    if (err) console.log(err.message);
-                    else console.log('Saved PID!');
-                });
                 console.log('stderr: ' + stderr);
                 if (error !== null) {
                   console.log('exec error: ' + error);
                 }
+                startp4 = exec("ps axf | grep simple_switch | grep -v grep | awk '{print $1}'", function (error, stdout, stderr) {
+                  console.log('stdout: ' + stdout);
+                  console.log('stderr: ' + stderr);
+                  fs.writeFile('pid.txt', stdout, function (err) {
+                      if (err) console.log(err.message);
+                      else console.log('Saved PID!');
+                  });
+                })
               });
             });
           });
