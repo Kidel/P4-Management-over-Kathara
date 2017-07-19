@@ -34,7 +34,7 @@ var update = function(req, res, next){
             console.log('exec error: ' + error);
           }
           var compile;
-          compile = exec("p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/  </dev/null &>/dev/null &" + req.body.p4Name, function (error, stdout, stderr) {
+          compile = exec("p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
             console.log('stdout: ' + stdout);
             console.log('stderr: ' + stderr);
             if (error !== null) {
