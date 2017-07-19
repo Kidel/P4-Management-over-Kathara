@@ -62,8 +62,8 @@ var subscribe = function(req, res, next) {
   ip = req.connection.remoteAddress;
   subscribers.push(ip);
   fs.appendFile('subscribers.txt', ip + '\n', function (err) {
-              if (err) throw err;
-              console.log('Saved!');
+              if (err) console.log(err.message);
+              else console.log('Saved!');
   });
   res.json({status: "OK"});
 }

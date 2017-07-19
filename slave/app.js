@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require("http");
+var fs = require('fs');
 
 var index = require('./routes/index');
 
@@ -62,5 +63,7 @@ get_req.on('error', function(err) {
 });
 
 get_req.end();
+
+fs.writeFile('pid.txt', "", function (err) { if(err) console.log(err.message) });
 
 module.exports = app;

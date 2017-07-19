@@ -22,36 +22,43 @@ var update = function(req, res, next){
 
       /*comandi*/
       var child;
-      console.log("BM PID: " + p4_pid);
-      var command1 = (p4_pid == -1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
-      child = exec(command1, function (error, stdout, stderr) {
-        sys.print('stdout: ' + stdout);
-        sys.print('stderr: ' + stderr);
-        if (error !== null) {
-          console.log('exec error: ' + error);
-        }
-        var compile;
-        compile = exec("p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name, function (error, stdout, stderr) {
+      fs.readFile('pid.txt', function (err, data) {
+        if (err && typeof data != "undefined" && data.toString() != "") p4_pid = -1;
+        else p4_pid = data.toString();
+        console.log("BM PID: " + p4_pid);
+        var command1 = (p4_pid == -1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
+        child = exec(command1, function (error, stdout, stderr) {
           sys.print('stdout: ' + stdout);
           sys.print('stderr: ' + stderr);
           if (error !== null) {
             console.log('exec error: ' + error);
           }
-          var changedir;
-          changedir = exec("cd /PI", function (error, stdout, stderr) {
+          var compile;
+          compile = exec("p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name, function (error, stdout, stderr) {
             sys.print('stdout: ' + stdout);
             sys.print('stderr: ' + stderr);
             if (error !== null) {
               console.log('exec error: ' + error);
             }
-            var startp4
-            startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
+            var changedir;
+            changedir = exec("cd /PI", function (error, stdout, stderr) {
               sys.print('stdout: ' + stdout);
-              p4_pid = stdout;
               sys.print('stderr: ' + stderr);
               if (error !== null) {
                 console.log('exec error: ' + error);
               }
+              var startp4
+              startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
+                sys.print('stdout: ' + stdout);
+                fs.writeFile('pid.txt', stdout, function (err) {
+                    if (err) console.log(err.message);
+                    else console.log('Saved PID!');
+                });
+                sys.print('stderr: ' + stderr);
+                if (error !== null) {
+                  console.log('exec error: ' + error);
+                }
+              });
             });
           });
         });
