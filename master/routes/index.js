@@ -74,7 +74,8 @@ var showUpdateForm = function(req, res, next) {
 
 var update = function(req, res, next) {
   fs.readFile('subscribers.txt', function (err, data) {
-    subscribers = data.split("\n");
+    subscribers = data.toString().split("\n");
+    console.log(subscribers);
     subscribers.forEach(function(ip) {
       var data = querystring.stringify({
           p4: req.body.p4,
