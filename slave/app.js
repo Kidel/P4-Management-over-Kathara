@@ -47,7 +47,7 @@ app.use(function(err, req, res, next) {
 var options = {
   host: '10.0.0.1',
   port: 3000,
-  path: '/',
+  path: '/subscribe',
   method: 'GET',
   headers: {
       'Content-Type': 'application/json'
