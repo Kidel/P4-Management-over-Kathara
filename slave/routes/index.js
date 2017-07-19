@@ -21,9 +21,8 @@ var update = function(req, res, next){
       var json_name = req.body.p4Name.replace('.p4', '.json');
 
       /*comandi*/
-
       var child;
-      var command1 = (p4_pid == -1)? "cd /p4c" : "kill " + p4_pid + " && cd /p4c";
+      var command1 = (p4_pid == -1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
       child = exec(command1, function (error, stdout, stderr) {
         sys.print('stdout: ' + stdout);
         sys.print('stderr: ' + stderr);
@@ -31,7 +30,7 @@ var update = function(req, res, next){
           console.log('exec error: ' + error);
         }
         var compile;
-        compile = exec("p4c -b bmv2-v1model-p4org /P4-Management-over-Netkit/slave/" + req.body.p4Name + " -o /P4-Management-over-Netkit/slave/" + json_name, function (error, stdout, stderr) {
+        compile = exec("p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name, function (error, stdout, stderr) {
           sys.print('stdout: ' + stdout);
           sys.print('stderr: ' + stderr);
           if (error !== null) {
