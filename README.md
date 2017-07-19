@@ -9,12 +9,12 @@ The master is also on the Doker bridge, exposing port 3000.
 
 - Master:
   - /detect -> requests to all Slaves. If they respond they are added as subscribers (the list is emptied before). 
-  - /subscribe -> adds the ip of the request as a subscribers.
-  - /update -> shows a form and the subsequent post is sent to all subscribers in order to compile and run the p4 and cpp code attached.
+  - /subscribe -> adds the IP address of the request as a subscribers.
+  - /update -> shows a form to send a P4 and cpu code to all subscribers.
   
 - Slave:
   - automatic message to 'master/subscribe' to subscribe on startup.
-  - /update -> attached files are copied, P4 processes are killed and the new file is compiled and run.
+  - /update -> attached files are copied, previous P4 processes are killed and the new files are compiled and run.
   
   
 ## Test
