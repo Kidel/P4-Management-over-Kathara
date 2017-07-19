@@ -44,7 +44,7 @@ app.use(function(err, req, res, next) {
 
 /*Send Subscribe Get Request to Master*/
 var options = {
-  host: 'localhost',
+  host: '10.0.0.1',
   port: 3000,
   path: '/',
   method: 'GET',
