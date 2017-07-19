@@ -5,6 +5,7 @@ var sys = require('sys')
 var exec = require('child_process').exec;
 
 var debug = true;
+var p4_pid = -1;
 
 var update = function(req, res, next){
   if (debug) console.log(req.body);
@@ -22,7 +23,8 @@ var update = function(req, res, next){
       /*comandi*/
 
       var child;
-      child = exec("cd /p4c-bm", function (error, stdout, stderr) {
+      var command1 = (p4_pid == -1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
+      child = exec(command1, function (error, stdout, stderr) {
         sys.print('stdout: ' + stdout);
         sys.print('stderr: ' + stderr);
         if (error !== null) {
@@ -45,6 +47,7 @@ var update = function(req, res, next){
             var startp4
             startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 " + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
               sys.print('stdout: ' + stdout);
+              p4_pid = stdout;
               sys.print('stderr: ' + stderr);
               if (error !== null) {
                 console.log('exec error: ' + error);
