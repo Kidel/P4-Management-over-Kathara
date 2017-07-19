@@ -14,7 +14,7 @@ var detect = function(req, res, next) {
   console.log('dentro get detect');
 
   /*Reset subscribers.txt and send get requests*/
-  var subscribers = [];
+  subscribers = [];
   fs.writeFile('subscribers.txt', '', function(){
     console.log('subscribers reset');
     man_network.forEach(function(ip) {
