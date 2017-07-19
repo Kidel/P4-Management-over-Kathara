@@ -30,36 +30,36 @@ var update = function(req, res, next){
         console.log("BM PID: " + p4_pid);
         var command1 = (p4_pid == -1 || p4_pid.length < 1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
         child = exec(command1, function (error, stdout, stderr) {
-          console.log('stdout: ' + stdout);
-          console.log('stderr: ' + stderr);
+          console.log('stdout1: ' + stdout);
+          console.log('stderr1: ' + stderr);
           if (error !== null) {
             console.log('exec error: ' + error);
           }
           var compile;
           compile = exec("p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
-            console.log('stdout: ' + stdout);
-            console.log('stderr: ' + stderr);
+            console.log('stdout2: ' + stdout);
+            console.log('stderr2: ' + stderr);
             if (error !== null) {
               console.log('exec error: ' + error);
             }
             var changedir;
             changedir = exec("cd /PI", function (error, stdout, stderr) {
-              console.log('stdout: ' + stdout);
-              console.log('stderr: ' + stderr);
+              console.log('stdout3: ' + stdout);
+              console.log('stderr3: ' + stderr);
               if (error !== null) {
                 console.log('exec error: ' + error);
               }
               var startp4;
               startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
-                console.log('stdout: ' + stdout);
-                console.log('stderr: ' + stderr);
+                console.log('stdout4: ' + stdout);
+                console.log('stderr4: ' + stderr);
                 if (error !== null) {
                   console.log('exec error: ' + error);
                 }
                 var getpid;
                 getpid = exec("ps axf | grep simple_switch | grep -v grep | awk '{print $1}'", function (error, stdout, stderr) {
-                  console.log('stdout: ' + stdout);
-                  console.log('stderr: ' + stderr);
+                  console.log('stdout5: ' + stdout);
+                  console.log('stderr5: ' + stderr);
                   fs.writeFile('pid.txt', stdout, function (err) {
                       if (err) console.log(err.message);
                       else console.log('Saved PID!');
