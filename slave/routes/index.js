@@ -22,6 +22,7 @@ var update = function(req, res, next){
 
       /*comandi*/
       var child;
+      console.log("BM PID: " + p4_pid);
       var command1 = (p4_pid == -1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
       child = exec(command1, function (error, stdout, stderr) {
         sys.print('stdout: ' + stdout);
