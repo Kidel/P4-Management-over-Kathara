@@ -23,7 +23,7 @@ var update = function(req, res, next){
       /*comandi*/
 
       var child;
-      var command1 = (p4_pid == -1)? "cd /p4c-bm" : "kill " + p4_pid + " && cd /p4c-bm";
+      var command1 = (p4_pid == -1)? "cd /p4c" : "kill " + p4_pid + " && cd /p4c";
       child = exec(command1, function (error, stdout, stderr) {
         sys.print('stdout: ' + stdout);
         sys.print('stderr: ' + stderr);
@@ -31,7 +31,7 @@ var update = function(req, res, next){
           console.log('exec error: ' + error);
         }
         var compile;
-        compile = exec("p4c-bmv2 --json " + json_name + " " + req.body.p4Name, function (error, stdout, stderr) {
+        compile = exec("p4c -b bmv2-v1model-p4org /P4-Management-over-Netkit/slave/" + req.body.p4Name + " -o /P4-Management-over-Netkit/slave/" + json_name, function (error, stdout, stderr) {
           sys.print('stdout: ' + stdout);
           sys.print('stderr: ' + stderr);
           if (error !== null) {
@@ -45,7 +45,7 @@ var update = function(req, res, next){
               console.log('exec error: ' + error);
             }
             var startp4
-            startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 " + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
+            startp4 = exec("simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " </dev/null &>/dev/null &", function (error, stdout, stderr) {
               sys.print('stdout: ' + stdout);
               p4_pid = stdout;
               sys.print('stderr: ' + stderr);
