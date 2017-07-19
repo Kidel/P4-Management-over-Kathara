@@ -44,24 +44,8 @@ app.use(function(err, req, res, next) {
 });
 
 /*Send Subscribe Get Request to Master*/
-var options = {
-  host: '10.0.0.1',
-  port: 3000,
-  path: '/subscribe',
-  method: 'GET',
-  headers: {
-      'Content-Type': 'application/json'
-  }
-}
-var get_req = http.request(options, function(response){
-    console.log(options.host + ':' + response.statusCode);
-    response.setEncoding('utf8');
+http.get("http://10.0.0.1:3000/subscribe", function(res) {
+    console.log("Received response from Master: " + res.statusCode);
 });
-
-get_req.on('error', function(err) {
-  console.log(err.message);
-});
-
-get_req.end();
 
 module.exports = app;
