@@ -4,9 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var http = require("http");
 
 var index = require('./routes/index');
-var users = require('./routes/users');
 
 var app = express();
 
@@ -23,7 +23,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,5 +41,26 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+/*Send Subscribe Get Request to Master*/
+var options = {
+  host: 'localhost',
+  port: 3000,
+  path: '/',
+  method: 'GET',
+  headers: {
+      'Content-Type': 'application/json'
+  }
+}
+var get_req = http.request(options, function(response){
+    console.log(options.host + ':' + response.statusCode);
+    response.setEncoding('utf8');
+});
+
+get_req.on('error', function(err) {
+  console.log(err.message);
+});
+
+get_req.end();
 
 module.exports = app;
