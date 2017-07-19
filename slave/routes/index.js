@@ -18,9 +18,7 @@ var update = function(req, res, next){
       else console.log('Saved p4 program in ' + req.body.p4Name);
 
       /*comandi*/
-
       var child;
-      // executes `pwd`
       child = exec("copy " + req.body.p4Name + " pippo.txt", function (error, stdout, stderr) {
         sys.print('stdout: ' + stdout);
         sys.print('stderr: ' + stderr);
@@ -31,9 +29,6 @@ var update = function(req, res, next){
 
     });
   });
-
-  
-
 };
 
 /* GET home page. */

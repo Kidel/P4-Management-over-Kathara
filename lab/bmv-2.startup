@@ -1,0 +1,7 @@
+ifconfig eth0 10.0.0.3/24 up
+ifconfig eth1 12.0.0.1/24 up
+
+cd P4-Management-over-Netkit
+git pull
+cd slave
+npm start

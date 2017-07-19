@@ -1,0 +1,14 @@
+version: "2.1"
+
+services:
+
+  master:
+    image: bonofiglio/p4-node-master
+    privileged: true
+    container_name: master
+    tty: true
+    hostname: localhost
+    ports:
+      - "3000:3000"
+    environment:
+      - HOSTNAME=localhost
