@@ -1,4 +1,4 @@
-# P4-Management-over-Netkit
+# P4 Management over Netkit
 A managing application that allows to control P4 switches in a Netkit environment. 
 
 NB: this is a test application, there is no security enforcement and should not be used in production. 
@@ -19,3 +19,4 @@ The master is also on the Doker bridge, exposing port 3000.
   
 ## Test
 To test it you need to install Docker and [Netkit-Doker](https://github.com/Kidel/Netkit-Python-Docker-core), then simply go to the lab folder and run start_lab. It will automatically generate the following network. Then simply go to localhost:3000 to access the front end. 
+![test network](lab/network_graph.png)
