@@ -64,6 +64,4 @@ get_req.on('error', function(err) {
 
 get_req.end();
 
-fs.writeFile('pid.txt', "", function (err) { if(err) console.log(err.message) });
-
 module.exports = app;
