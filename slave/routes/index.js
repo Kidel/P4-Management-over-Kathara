@@ -24,10 +24,10 @@ var update = function(req, res, next){
         console.log('stdout5: ' + stdout);
         console.log('stderr5: ' + stderr);
         console.log("BM PID: " + stdout);
-        var command1 = (stdout.length < 1)? "cd /p4c-bm" : "kill " + stdout + " && cd /p4c-bm";
+        var command1 = (stdout.length < 1)? "cd /behavioral-model" : "kill " + stdout + " && cd /behavioral-model";
         var child = exec(
             command1 + " && p4c-bmv2 --json /P4-Management-over-Netkit/slave/" + json_name + " /P4-Management-over-Netkit/slave/" + req.body.p4Name 
-            + " && cd /PI && simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " &"
+            + " && ./targets/simple_switch/simple_switch -i 0@eth1 -i 1@eth2 /P4-Management-over-Netkit/slave/" + json_name + " &"
             , function (error, stdout, stderr) {
                 console.log('stdout2: ' + stdout);
                 console.log('stderr2: ' + stderr);
