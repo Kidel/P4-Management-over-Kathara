@@ -81,7 +81,8 @@ var update = function(req, res, next) {
           p4: req.body.p4,
           p4Name: req.body.p4Name,
           cpu: req.body.cpu,
-          cpuName: req.body.cpuName
+          cpuName: req.body.cpuName,
+          commands: req.body.commands
         });
 
       var options = {
